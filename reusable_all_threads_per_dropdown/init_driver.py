@@ -1,13 +1,16 @@
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
-from shutil import which
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 
 def init_driver(index):
     options = webdriver.ChromeOptions()
 
     options.add_argument("--headless=new")
 
-    driver = webdriver.Chrome(executable_path=which('chromedriver'), options=options)
+    service = Service(ChromeDriverManager().install())
+    
+    driver = webdriver.Chrome(service=service, options=options)
     
     driver.set_page_load_timeout(15)
 

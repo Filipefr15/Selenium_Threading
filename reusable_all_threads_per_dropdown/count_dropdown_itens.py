@@ -8,7 +8,7 @@ from init_driver import init_driver
 
 def count_dropdown_itens(cnpj):
     #inicia o driver (chrome)
-    driver = init_driver(0)
+    driver = init_driver(-1)
 
     driver.switch_to.default_content()
 
