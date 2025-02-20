@@ -4,25 +4,25 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import TimeoutException
-from openpyxl import load_workbook
+#from openpyxl import load_workbook
 from init_driver import init_driver
 from count_dropdown_itens import count_dropdown_itens
 from list_helper import list_pop, list_receiver
 from get_daily_data import get_daily_data
 
-wb = load_workbook('../BD_CADASTRO_NUMERADO_AGO_TESTE.xlsx')
-ws, ws2 = wb['Fundos'], wb['Fundos_Cota']
-lista_cnpj = []
+# wb = load_workbook('../BD_CADASTRO_NUMERADO_AGO_TESTE.xlsx')
+# ws, ws2 = wb['Fundos'], wb['Fundos_Cota']
+# lista_cnpj = []
 
-for row in ws.iter_rows(values_only=True):
-    cnpj = row[1]
-    lista_cnpj.append(cnpj)
+# for row in ws.iter_rows(values_only=True):
+#     cnpj = row[1]
+#     lista_cnpj.append(cnpj)
 
-for row in ws2.iter_rows(values_only=True):
-    cnpj = row[1] 
-    lista_cnpj.append(cnpj)
+# for row in ws2.iter_rows(values_only=True):
+#     cnpj = row[1] 
+#     lista_cnpj.append(cnpj)
 
-print("Coleta de CNPJs finalizada")
+# print("Coleta de CNPJs finalizada")
 
 dados_diarios_list = []
 
@@ -96,10 +96,16 @@ list_cnpj_teste = ["58.878.941/0001-02", "36.248.874/0001-00", "51.017.442/0001-
 
 threads = []
 
+max_tries = 3
+
 # Criando threads em blocos de 8
 for cnpj in list_cnpj_teste:
     print("Coleta tamanho do dropdown iniciada")
     tamanho = count_dropdown_itens(cnpj)
+    while tamanho is None and max_tries > 0:
+        print("Erro na coleta do tamanho do dropdown, reiniciando...")
+        tamanho = count_dropdown_itens(cnpj)
+        max_tries -= 1
     print("Tamanho do dropdown coletado com sucesso")
     list_to_finish = list(range(tamanho))
     list_receiver(list_to_finish)
@@ -107,7 +113,7 @@ for cnpj in list_cnpj_teste:
         try:
             var = list_pop()
             thread = threading.Thread(target=get_inside, args=(cnpj, index, var))
-            print(list_to_finish)
+            #print(list_to_finish)
             threads.append(thread)
             thread.start()
         except IndexError:
@@ -127,5 +133,7 @@ df_sorted = df.sort_values(by=['Cnpj'], ignore_index=True)
 #isso é necessário para que o excel deixe os valores de datas em formato de data
 df_sorted['Mês'] = pd.to_datetime(df_sorted['Mês']).dt.to_period('M')
 df_sorted.to_excel('funds.xlsx', index=False)
+
+print(df_sorted)
 
 print("Planilha gerada com sucesso")  
