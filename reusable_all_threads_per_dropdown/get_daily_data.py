@@ -52,18 +52,18 @@ def get_daily_data(index, driver, cnpj, stored_name, item_to_finish):
             "Patrimônio Líquido": dados[4].text.strip(),
             "Número de Cotistas": dados[6].text.strip(),
         }
-        #dados_diarios_list.append(dados_diarios)
+        dados_diarios_list.append(dados_diarios)
 
     print(f"Thread {index+1} finalizou coleta de dados diários")
     if list_is_none():
         print(f"Thread {index+1} finalizada")
-        return dados_diarios
+        return dados_diarios_list
     else:
         try:
             new_item_to_finish = list_pop()
             print(full_list())
         except IndexError:
             print(f"Thread {index+1} finalizada")
-            return dados_diarios
+            return dados_diarios_list
         print(f"Thread {index+1} reiniciando procura de dados diários")
         get_daily_data(index, driver, cnpj, stored_name, new_item_to_finish)

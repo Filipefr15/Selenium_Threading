@@ -5,7 +5,7 @@ from shutil import which
 def init_driver(index):
     options = webdriver.ChromeOptions()
 
-    #options.add_argument("--headless=new")
+    options.add_argument("--headless=new")
 
     driver = webdriver.Chrome(executable_path=which('chromedriver'), options=options)
     
