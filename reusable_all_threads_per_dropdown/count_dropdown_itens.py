@@ -8,6 +8,7 @@ from init_driver import init_driver
 
 def count_dropdown_itens(cnpj):
     #inicia o driver (chrome)
+    #-1 é apenas para saber que é a iniciação do programa, e não um driver de pesquisa específica.
     driver = init_driver(-1)
 
     #esse try serve para proteger o programa de um erro que aconteceu apenas no docker, um TimeoutException
